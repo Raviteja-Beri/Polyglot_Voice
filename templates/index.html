@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌍 Polyglot Voice</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      max-width: 600px;
+      width: 100%;
+      animation: fadeIn 0.5s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      font-size: 2.2em;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #34495e;
+    }
+    textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #3498db;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    textarea:focus, select:focus {
+      border-color: #1abc9c;
+      box-shadow: 0 0 8px rgba(26, 188, 156, 0.3);
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #3498db, #1abc9c);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(to right, #2980b9, #16a085);
+      transform: translateY(-2px);
+    }
+    .translated-text {
+      background: #ecf0f1;
+      border-left: 5px solid #3498db;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 1.1em;
+      color: #2c3e50;
+    }
+    .audio-section {
+      margin-top: 20px;
+      text-align: center;
+    }
+    audio {
+      width: 100%;
+      margin: 10px 0;
+    }
+    .download-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #1abc9c;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    .download-link:hover {
+      color: #16a085;
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌍 Multi-Language Translator with Audio</h1>
+    <form method="POST">
+      <div class="form-group">
+        <label for="input_text">Enter Text</label>
+        <textarea name="input_text" id="input_text" rows="5" placeholder="Enter text to translate" required>{{ request.form.input_text }}</textarea>
+      </div>
+      <div class="form-group">
+        <label for="language">Choose Language</label>
+        <select name="language" id="language" required>
+          <option value="" disabled>Select a language</option>
+          {% for lang in languages %}
+            <option value="{{ lang }}" {% if lang == selected_lang %}selected{% endif %}>{{ lang }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit">Translate</button>
+    </form>
+
+    {% if translated_text %}
+      <div class="translated-text">
+        <strong>Translated Text:</strong>
+        <p>{{ translated_text }}</p>
+        {% if audio_generated and audio_path %}
+          <div class="audio-section">
+            <strong>🔊 Audio Output:</strong>
+            <audio controls>
+              <source src="{{ audio_path }}" type="audio/mp3">
+              Your browser does not support the audio tag. Please download the audio file or use a modern browser.
+            </audio>
+            <a class="download-link" href="/download/{{ audio_filename }}">Download Audio</a>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
